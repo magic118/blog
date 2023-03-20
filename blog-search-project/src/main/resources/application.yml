@@ -7,9 +7,16 @@ spring:
     thymeleaf:
       cache: false
 
+
+  jpa:
+    show-sql: true
+
   blog:
     kakao:
       restapi:
         host: http://dapi.kakao.com
         uri: /v2/search/blog
         key: 1ce008d054e9c456fd9d392bb80265ce
+  h2:
+    console:
+      enabled: true

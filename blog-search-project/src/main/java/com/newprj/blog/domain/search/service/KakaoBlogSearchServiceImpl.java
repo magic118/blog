@@ -2,8 +2,11 @@ package com.newprj.blog.domain.search.service;
 
 import com.newprj.blog.common.exception.InternalServerException;
 import com.newprj.blog.controller.web.model.BlogSearchResponse;
+import com.newprj.blog.domain.search.dto.BlogHistoryDto;
 import com.newprj.blog.domain.search.dto.BlogSearchDto;
 import com.newprj.blog.domain.search.dto.condition.BlogSearchCondition;
+import com.newprj.blog.domain.search.entity.PopularSearchListHistory;
+import com.newprj.blog.domain.search.repository.PopularSearchListHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,17 +15,20 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class KakaoBlogSearchServiceImpl implements BlogSearchService {
+    private final PopularSearchListHistoryRepository popularSearchListHistoryRepository;
     private final RestTemplate restTemplate;
 
     @Value("${spring.blog.kakao.restapi.host}")
@@ -85,6 +91,37 @@ public class KakaoBlogSearchServiceImpl implements BlogSearchService {
         }
         blogSearchDto.setBlogInfoList(blogInfoList);
 
+        updatePopularSearchListHistory(condition.getQuery());
+
         return blogSearchDto;
+    }
+
+    @Transactional
+    public void updatePopularSearchListHistory(String query) {
+        Optional<PopularSearchListHistory> popularSearchListHistory = popularSearchListHistoryRepository.findByQuery(query);
+
+        if(popularSearchListHistory.isPresent()) {
+            popularSearchListHistory.get().setCount(popularSearchListHistory.get().getCount() + 1L);
+            popularSearchListHistoryRepository.save(popularSearchListHistory.get());
+        } else {
+            popularSearchListHistoryRepository.save(PopularSearchListHistory.builder()
+                    .query(query)
+                    .count(1L).build());
+        }
+    }
+
+    public List<BlogHistoryDto> getTop10PopularHistorys() {
+        List<PopularSearchListHistory> popularSearchListHistoryList = popularSearchListHistoryRepository.findTop10ByOrderByCountDesc();
+        List<BlogHistoryDto> blogHistoryDtoList = new ArrayList<>();
+
+        for(PopularSearchListHistory hist : popularSearchListHistoryList) {
+            BlogHistoryDto blogHistoryDto = new BlogHistoryDto()
+                    .setQuery(hist.getQuery())
+                    .setCount(hist.getCount());
+
+            blogHistoryDtoList.add(blogHistoryDto);
+        }
+
+        return blogHistoryDtoList;
     }
 }
