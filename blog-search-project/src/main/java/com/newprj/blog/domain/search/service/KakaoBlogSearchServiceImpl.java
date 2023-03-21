@@ -110,6 +110,7 @@ public class KakaoBlogSearchServiceImpl implements BlogSearchService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<BlogHistoryDto> getTop10PopularHistorys() {
         List<PopularSearchListHistory> popularSearchListHistoryList = popularSearchListHistoryRepository.findTop10ByOrderByCountDesc();
         List<BlogHistoryDto> blogHistoryDtoList = new ArrayList<>();

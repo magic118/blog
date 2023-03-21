@@ -8,7 +8,6 @@ public class InternalServerException extends BaseRuntimeException {
     @Override
     public ErrorCode errorCode() {
         return ErrorCode.INTERNAL_ERROR;
-
     }
 
     @Override
@@ -19,14 +18,13 @@ public class InternalServerException extends BaseRuntimeException {
     public InternalServerException(Throwable t) {
         super(t);
     }
-
     public InternalServerException(String s) {
         super(s);
     }
-
     public InternalServerException() {
         super();
     }
+
     @Override
     public String userErrorMessage() {
         return null;

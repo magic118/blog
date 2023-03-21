@@ -23,7 +23,6 @@ public class BlogHistoryWebController {
         List<BlogHistoryDto> blogHistoryDtoList = blogSearchService.getTop10PopularHistorys();
 
         model.addAttribute("blogHistoryDtoList", blogHistoryDtoList);
-
         return "blog/blog_history";
     }
 }

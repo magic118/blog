@@ -7,8 +7,8 @@ import lombok.Setter;
 @Setter
 public class BlogSearchCondition {
     private String query;
+
+    private int size;
     private String sortItem;
     private int page;
-    private int size;
-    private int limit;
 }
