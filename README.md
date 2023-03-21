@@ -4,7 +4,7 @@ blog 관련 나만의 기능 구현
  기능2) 인기 검색어 목록 (Refresh 버튼) : /blog/history 
 
 기능 점검을 위한 빌드 결과물
- - 개인 구글 드라이브 : blog-0.0.1-SNAPSHOT.jar
+ - 개인 구글 드라이브 : blog-0.0.1-SNAPSHOT.jar (아래링크에서 다운로드가능)
  - https://drive.google.com/file/d/1UxK4DnbsU9DGnhUZYuhp3kVwPPZNs1XD/view?usp=share_link
 
 제약사항
